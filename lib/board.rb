@@ -2,13 +2,11 @@ class Board
   attr_accessor :cells
 
   def initialize
-    @cells = []
     reset!
   end
 
   def reset!
-    @cells.clear
-    @cells = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    @cells = Array.new(9, " ")
   end  
 
   def display
@@ -24,32 +22,20 @@ class Board
   end
 
   def full?
-    spot_filled = []
-    cells.each do |cell| 
-      if cell.include?("X") || cell.include?("O")
-        spot_filled << true
-      else 
-        spot_filled << false
-      end
-    end
-    ( spot_filled.include?(false) ? false : true ) 
+    cells.all? { |cell| cell == "X" || cell == "O" }
   end
 
   def turn_count
-    turn_total = 0
-    cells.each do |cell| 
-      turn_total += 1 if cell.include?("X") || cell.include?("O")
-    end
-    turn_total
+    cells.count { |cell| cell == "X" || cell == "O" }
   end
 
   def taken?(number)
     spot = number.to_i
-    ( cells[spot-1] == "X" || cells[spot-1] == "O" ? true : false )
+    cells[spot-1] == "X" || cells[spot-1] == "O"
   end
 
   def valid_move?(number)
-    ( number.to_i.between?(1,9) && !taken?(number) ? true : false )
+    number.to_i.between?(1,9) && !taken?(number)
   end
 
   def update(number, player)

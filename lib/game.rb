@@ -21,7 +21,7 @@ class Game
   end
 
   def current_player
-    ( board.turn_count % 2 == 0 ? @player_1 : @player_2 )
+    board.turn_count.even? ? @player_1 : @player_2
   end
 
   def over?
@@ -29,7 +29,7 @@ class Game
   end
 
   def won?
-    WIN_COMBINATIONS.each do |win_combination|
+    WIN_COMBINATIONS.detect do |win_combination|
       win_index_1 = win_combination[0]
       win_index_2 = win_combination[1]
       win_index_3 = win_combination[2]
@@ -38,9 +38,8 @@ class Game
       position_2 = board.cells[win_index_2]
       position_3 = board.cells[win_index_3]
       
-      return win_combination if (position_1 == "X" && position_2 == "X" && position_3 == "X") || (position_1 == "O" && position_2 == "O" && position_3 == "O")
+      (position_1 == "X" && position_2 == "X" && position_3 == "X") || (position_1 == "O" && position_2 == "O" && position_3 == "O")
     end
-    return false
   end
 
   def draw?
@@ -48,8 +47,8 @@ class Game
   end
 
   def winner
-    if won?
-      board.cells[won?[0]]
+    if won = won?
+      board.cells[won.first]
     end
   end
 
@@ -112,6 +111,7 @@ class Game
   end
 
   def start
+    puts "Welcome to Tic-Tac-Toe!" 
     input = nil
     while input != 5
       puts "How would you like to play? Please select a number:"
